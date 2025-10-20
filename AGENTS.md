@@ -6,6 +6,6 @@
 - ./typescript-pro.md
 - ./javascript-pro.md
 
-## 文档
+## 产品文档
 
 - [PRD](./docs/PRD.md)
