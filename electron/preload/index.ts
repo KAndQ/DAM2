@@ -1,4 +1,6 @@
 import { ipcRenderer, contextBridge } from 'electron'
+import type { IpcRendererEvent } from 'electron'
+import type { RendererIpcClient } from '../../src/shared/ipc/types'
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld('ipcRenderer', {
@@ -22,6 +24,24 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   // You can expose other APTs you need here.
   // ...
 })
+
+const dam2Ipc: RendererIpcClient = {
+  invoke(channel, payload) {
+    return ipcRenderer.invoke(channel, payload)
+  },
+  on(channel, listener) {
+    const subscription = (event: IpcRendererEvent, data: unknown) => {
+      listener({
+        data: data as never,
+        event,
+      })
+    }
+    ipcRenderer.on(channel, subscription)
+    return () => ipcRenderer.removeListener(channel, subscription)
+  },
+}
+
+contextBridge.exposeInMainWorld('dam2Ipc', dam2Ipc)
 
 // --------- Preload scripts loading ---------
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {

@@ -1,7 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { ConfigProvider, theme } from 'antd'
 import App from './App'
 
+import 'antd/dist/reset.css'
 import './index.css'
 
 import './demos/ipc'
@@ -10,7 +12,23 @@ import './demos/ipc'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <App />
+    <ConfigProvider
+      theme={{
+        algorithm: theme.defaultAlgorithm,
+        token: {
+          colorPrimary: '#1677ff',
+          borderRadius: 6,
+        },
+        components: {
+          Layout: {
+            headerBg: '#ffffff',
+            bodyBg: '#f5f7fb',
+          },
+        },
+      }}
+    >
+      <App />
+    </ConfigProvider>
   </React.StrictMode>,
 )
 
